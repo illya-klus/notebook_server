@@ -1,6 +1,7 @@
 import express from "express"
 import cors from "cors"
 import dotenv from "dotenv"
+import { AuthRouter } from "./modules/Auth/auth.router";
 dotenv.config();
 
 
@@ -14,6 +15,7 @@ app.use(cors({
 
 
 app.get("/", (req, res)=> res.status(200).json({message:"Hello from server!"}));
+app.use("/auth", AuthRouter);
 
 const Port = process.env.PORT || 5000;
 app.listen(Port, () => {

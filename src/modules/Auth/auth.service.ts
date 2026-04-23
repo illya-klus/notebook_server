@@ -51,7 +51,7 @@ export const createUser = async (user : userRequest) => {
     data: {
         email : user.email,
         name : user.name,
-        password : passwordHash
+        password : passwordHash,
     }});
 
     return newUser;
