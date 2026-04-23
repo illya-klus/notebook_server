@@ -1,0 +1,73 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
+  name     String?
+  password String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  notes   Note[]
+  links   Link[]
+  folders Folder[]
+}
+
+model Folder {
+  id   Int     @id @default(autoincrement())
+  name String?
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  notes Note[]
+
+  createdAt DateTime @default(now())
+}
+
+model Note {
+  id      Int    @id @default(autoincrement())
+  title   String
+  content String
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  folderId Int?
+  folder   Folder? @relation(fields: [folderId], references: [id], onDelete: SetNull)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  version Int @default(1)
+
+  outgoingLinks Link[] @relation("OutgoingLinks")
+  incomingLinks Link[] @relation("IncomingLinks")
+}
+
+model Link {
+  id Int @id @default(autoincrement())
+
+  fromNoteId Int
+  toNoteId   Int
+
+  fromNote Note @relation("OutgoingLinks", fields: [fromNoteId], references: [id], onDelete: Cascade)
+  toNote   Note @relation("IncomingLinks", fields: [toNoteId], references: [id], onDelete: Cascade)
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  @@index([fromNoteId])
+  @@index([toNoteId])
+  @@index([userId])
+}
