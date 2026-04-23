@@ -5,6 +5,7 @@ import { AuthRouter } from "./modules/Auth/auth.router";
 import cookieParser from "cookie-parser";
 import { FilesRouter } from "./modules/Files/files.router";
 import { AuthMiddleware } from "./midlewares/auth.middleware";
+import { FoldersRouter } from "./modules/Folders/folders.router";
 dotenv.config();
 
 
@@ -21,6 +22,7 @@ app.use(cookieParser());
 app.get("/", (req, res)=> res.status(200).json({message:"Hello from server!"}));
 app.use("/auth", AuthRouter);
 app.use("/file", AuthMiddleware, FilesRouter);
+app.use("/folder", AuthMiddleware, FoldersRouter)
 
 const Port = process.env.PORT || 5000;
 app.listen(Port, () => {

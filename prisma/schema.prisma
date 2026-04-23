@@ -34,7 +34,10 @@ model Folder {
   userId Int
   user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  notes Note[]
+  parentId Int?
+  parent   Folder?  @relation("FolderToFolder", fields: [parentId], references: [id])
+  children Folder[] @relation("FolderToFolder")
+  notes    Note[]
 
   createdAt DateTime @default(now())
 }
